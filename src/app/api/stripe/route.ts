@@ -12,18 +12,21 @@ const calculateOrderAmount = (items: any): number => {
 };
 
 export const POST = async (req: NextRequest) => {
-  // Parse JSON from the request
-  const { items } = await req.json();
-
-  // Create a PaymentIntent
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: calculateOrderAmount(items),
-    currency: "eur",
-    automatic_payment_methods: { enabled: true },
-  });
-
-  // Respond with the client secret
-  return NextResponse.json({
-    clientSecret: paymentIntent.client_secret,
-  });
-}
+    const { items, userId } = await req.json();
+  
+    // Create a PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: calculateOrderAmount(items),
+      currency: "eur",
+      automatic_payment_methods: { enabled: true },
+      metadata: {
+        userId, // Track the user making the purchase
+        items: JSON.stringify(items), // Optional: Add item details
+      },
+    });
+  
+    // Respond with the client secret
+    return NextResponse.json({
+      clientSecret: paymentIntent.client_secret,
+    });
+  };

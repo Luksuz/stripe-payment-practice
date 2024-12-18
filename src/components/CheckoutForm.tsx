@@ -27,7 +27,7 @@ export default function CheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://localhost:3000", // Payment completion page
+        return_url: "https://stripe-payment-practice-ten.vercel.app/payment/success", // Payment completion page
       },
     });
 
